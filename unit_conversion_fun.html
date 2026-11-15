@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Super Unit Converter – Learn & Play!</title>
+<style>
+  :root{--ink:#20304a;--blue:#3478f6;--pink:#ff6f91;--yellow:#ffd166;--green:#48c78e;--paper:#fffdf7}
+  *{box-sizing:border-box} body{margin:0;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--ink);background:linear-gradient(135deg,#e7f5ff,#fff0f5 55%,#fff8df);min-height:100vh}
+  header{text-align:center;padding:30px 16px 22px;background:radial-gradient(circle at 15% 20%,#fff 0 7%,transparent 8%),linear-gradient(120deg,#6ec6ff,#a78bfa);color:#fff}
+  header h1{font-size:clamp(2rem,5vw,3.3rem);margin:0 0 8px;text-shadow:2px 3px 0 #4d6db5} header p{font-size:1.1rem;margin:0}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px 16px 48px}.intro{text-align:center;font-size:1.1rem;margin:4px auto 22px;max-width:720px}
+  .tabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}.tab{border:0;border-radius:999px;padding:12px 19px;font-weight:800;font-size:1rem;cursor:pointer;background:#fff;box-shadow:0 4px 0 #d8deeb;color:var(--ink)}.tab.active{background:var(--yellow);transform:translateY(-2px);box-shadow:0 6px 0 #e6b84c}
+  .panel{background:rgba(255,255,255,.92);border:3px solid #fff;border-radius:24px;padding:clamp(18px,4vw,30px);box-shadow:0 12px 30px #52658b20}
+  .unit-title{display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;font-size:clamp(1.5rem,4vw,2.1rem);margin:0 0 8px}.emoji{font-size:2.2rem}.hint{text-align:center;margin:0 0 22px;color:#53627b}
+  .visual{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:20px 0;padding:18px;background:#f3f8ff;border-radius:18px}.visual .big{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;color:#315fbd}.arrow{font-size:2rem;color:var(--pink)}
+  .converter{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0}.converter input{width:180px;max-width:65vw;padding:14px;border:2px solid #b9c9e7;border-radius:14px;font-size:1.3rem;font-weight:700;text-align:center;color:var(--ink)}select{padding:14px;border:2px solid #b9c9e7;border-radius:14px;font-size:1rem;background:#fff;color:var(--ink)}
+  button.action{border:0;border-radius:14px;padding:13px 20px;font-weight:900;font-size:1rem;background:var(--blue);color:#fff;cursor:pointer;box-shadow:0 4px 0 #2055b8}button.action:active{transform:translateY(3px);box-shadow:0 1px 0 #2055b8}
+  .result{min-height:58px;text-align:center;background:#e9fff4;border:2px dashed #7bd6aa;border-radius:16px;padding:14px;margin:14px auto;max-width:600px;font-size:1.35rem;font-weight:900;color:#16734a}.result small{display:block;font-size:.9rem;font-weight:600;color:#47735e;margin-top:4px}
+  .activity{margin-top:28px;padding:20px;border-radius:20px;background:#fff7df;border:2px solid #ffe19a}.activity h3{margin:0 0 8px;font-size:1.35rem}.question{font-size:1.15rem;font-weight:800;margin:12px 0}.choices{display:flex;gap:10px;flex-wrap:wrap}.choice{background:#fff;border:2px solid #e8c96e;border-radius:12px;padding:11px 17px;font-weight:800;cursor:pointer}.choice:hover{background:#fff0b8}.feedback{font-weight:800;min-height:26px;margin-top:12px}.score{text-align:right;font-weight:800;color:#6a5a27}
+  .footer{text-align:center;padding:22px 10px;color:#5b6680;font-size:.9rem}.sparkle{font-size:1.2rem}
+  @media(max-width:520px){.converter{flex-direction:column}.converter input,select{width:100%;max-width:100%}.arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌟 Super Unit Converter! 🌟</h1>
+  <p>Learn, convert and play — maths can be fun!</p>
+</header>
+<main class="wrap">
+  <p class="intro">Hello, young mathematician! Choose a unit family, try the converter, and answer the fun quiz. You can do it! 🎉</p>
+  <nav class="tabs" aria-label="Choose a conversion">
+    <button class="tab active" data-kind="length">📏 Metres & centimetres</button>
+    <button class="tab" data-kind="volume">🥛 Millilitres & litres</button>
+    <button class="tab" data-kind="mass">⚖️ Grams & kilograms</button>
+  </nav>
+  <section class="panel">
+    <h2 class="unit-title" id="unitTitle"><span class="emoji">📏</span> Metres ⇄ Centimetres</h2>
+    <p class="hint" id="unitHint">A metre is a bigger unit. 1 metre = 100 centimetres.</p>
+    <div class="visual" id="visual"><span class="big">1 metre</span><span class="arrow">⟶</span><span class="big">100 centimetres</span></div>
+    <div class="converter">
+      <input id="amount" type="number" min="0" step="any" value="2" aria-label="Amount to convert" />
+      <select id="direction" aria-label="Conversion direction">
+        <option value="largeToSmall">metres → centimetres</option>
+        <option value="smallToLarge">centimetres → metres</option>
+      </select>
+      <button class="action" id="convertBtn">Convert ✨</button>
+    </div>
+    <div class="result" id="result" aria-live="polite">2 metres = 200 centimetres<small>Tip: multiply by 100 to change metres into centimetres.</small></div>
+    <div class="activity">
+      <div class="score" id="score">⭐ Stars: 0</div>
+      <h3>🎯 Quick Quiz</h3>
+      <div class="question" id="question">How many centimetres are there in 3 metres?</div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+      <button class="action" id="nextBtn" style="margin-top:10px;background:#e76b91;box-shadow:0 4px 0 #b94d70">Next question ➜</button>
+    </div>
+  </section>
+  <div class="footer"><span class="sparkle">💡</span> Remember: bigger unit to smaller unit — multiply. Smaller unit to bigger unit — divide!</div>
+</main>
+<script>
+const units={
+ length:{title:'Metres ⇄ Centimetres',emoji:'📏',large:'metre',small:'centimetre',factor:100,pluralLarge:'metres',pluralSmall:'centimetres',hint:'A metre is a bigger unit. 1 metre = 100 centimetres.',sample:'1 metre',sample2:'100 centimetres',q:'How many centimetres are there in 3 metres?',answer:300,options:[30,300,3000],explain:'3 × 100 = 300 centimetres.'},
+ volume:{title:'Litres ⇄ Millilitres',emoji:'🥛',large:'litre',small:'millilitre',factor:1000,pluralLarge:'litres',pluralSmall:'millilitres',hint:'A litre is a bigger unit. 1 litre = 1,000 millilitres.',sample:'1 litre',sample2:'1,000 millilitres',q:'How many millilitres are there in 2 litres?',answer:2000,options:[200,2000,20000],explain:'2 × 1,000 = 2,000 millilitres.'},
+ mass:{title:'Kilograms ⇄ Grams',emoji:'⚖️',large:'kilogram',small:'gram',factor:1000,pluralLarge:'kilograms',pluralSmall:'grams',hint:'A kilogram is a bigger unit. 1 kilogram = 1,000 grams.',sample:'1 kilogram',sample2:'1,000 grams',q:'How many grams are there in 4 kilograms?',answer:4000,options:[400,4000,40000],explain:'4 × 1,000 = 4,000 grams.'}
+};
+let kind='length',stars=0,answered=false;
+const $=id=>document.getElementById(id);
+function format(n){return Number(n).toLocaleString('en-IN',{maximumFractionDigits:6});}
+function render(){const u=units[kind];$('unitTitle').innerHTML=`<span class="emoji">${u.emoji}</span> ${u.title}`;$('unitHint').textContent=u.hint;$('visual').innerHTML=`<span class="big">${u.sample}</span><span class="arrow">⟶</span><span class="big">${u.sample2}</span>`;
+ $('direction').innerHTML=`<option value="largeToSmall">${u.pluralLarge} → ${u.pluralSmall}</option><option value="smallToLarge">${u.pluralSmall} → ${u.pluralLarge}</option>`;$('amount').value=kind==='length'?2:2;convert();newQuestion();}
+function convert(){const u=units[kind],n=parseFloat($('amount').value),dir=$('direction').value;if(!Number.isFinite(n)||n<0){$('result').textContent='Please enter a number that is 0 or more.';return;}
+ const value=dir==='largeToSmall'?n*u.factor:n/u.factor;const from=dir==='largeToSmall'?u.pluralLarge:u.pluralSmall,to=dir==='largeToSmall'?u.pluralSmall:u.pluralLarge;const verb=dir==='largeToSmall'?'multiply':'divide';$('result').innerHTML=`${format(n)} ${from} = ${format(value)} ${to}<small>Tip: ${verb} by ${format(u.factor)} to convert ${from} into ${to}.</small>`;}
+function newQuestion(){const u=units[kind];answered=false;$('question').textContent=u.q;$('feedback').textContent='Choose the correct answer!';$('choices').innerHTML='';[...u.options].sort(()=>Math.random()-.5).forEach(v=>{const b=document.createElement('button');b.className='choice';b.textContent=format(v);b.onclick=()=>check(v,b);$('choices').appendChild(b);});}
+function check(value,button){if(answered)return;answered=true;const u=units[kind];if(value===u.answer){stars++;$('feedback').textContent='🎉 Brilliant! That is correct. '+u.explain;$('feedback').style.color='#16804f';button.style.background='#c9f7df';}else{$('feedback').textContent=`Good try! The correct answer is ${format(u.answer)}. ${u.explain}`;$('feedback').style.color='#b34d56';button.style.background='#ffe0e0';}$('score').textContent=`⭐ Stars: ${stars}`;}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');kind=b.dataset.kind;render();}));$('convertBtn').addEventListener('click',convert);$('amount').addEventListener('keydown',e=>{if(e.key==='Enter')convert();});$('direction').addEventListener('change',convert);$('nextBtn').addEventListener('click',newQuestion);render();
+</script>
+</body>
+</html>
